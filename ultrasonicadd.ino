@@ -9,10 +9,9 @@ const int mlf = 4; //motor-left-front
 const int mlb = 5; //motor-left-back
 const int enaRight = 6;
 const int enaLeft = 10;
-const int trigPin = 8;
-const int echoPin = 9;
+const int trigPin = 11;
+const int echoPin = 12;
 const int ldrAnalogPin = A5;
-const int ldrDigitalPin = 11;
 int sensorValue1 ; // 0 or 1
 int sensorValue2 ;
 int sensorValue3 ;
@@ -38,23 +37,22 @@ void setup() {
   pinMode(enaLeft, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  pinMode(ldrDigitalPin, INPUT);
   pinMode(ldrAnalogPin, INPUT);
 
   stopMotors();
 }
 
 void loop() {
-  updateSensorValues();
-
-  Serial.println(analogRead(sensorPin1));
-  Serial.println(analogRead(sensorPin2));
-  Serial.println(analogRead(sensorPin3));
-  Serial.println(analogRead(sensorPin4));
-  Serial.println(analogRead(sensorPin5));
-  Serial.println("=================================================================");
-
-  //ultrasonic
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration * 0.034 / 2);
+  Serial.println(distance);
+  while(distance<10){
+    stopMotors();
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
     digitalWrite(trigPin, HIGH);
@@ -62,16 +60,7 @@ void loop() {
     digitalWrite(trigPin, LOW);
     duration = pulseIn(echoPin, HIGH);
     distance = (duration * 0.034 / 2);
-    while(distance<10){
-      stopMotors();
-      digitalWrite(trigPin, LOW);
-      delayMicroseconds(2);
-      digitalWrite(trigPin, HIGH);
-      delayMicroseconds(10);
-      digitalWrite(trigPin, LOW);
-      duration = pulseIn(echoPin, HIGH);
-      distance = (duration * 0.034 / 2);
-    }
+  }
   // อ่านทาง
   if (sensorValue1 <= 0 || sensorValue2 <= 0 || sensorValue3 <= 0 ||
   sensorValue4 <= 0 || sensorValue5 <= 0) {
@@ -127,37 +116,37 @@ void loop() {
     // Left
       else if(sensorValue1==0&& sensorValue2==0 &&sensorValue3==0 &&sensorValue4==0 &&sensorValue5==1){
         turnLeft();
-        delay(300);
+        delay(150);
         stopMotors();
         updateSensorValues();
       }else if(sensorValue1==0&& sensorValue2==0 &&sensorValue3==0 &&sensorValue4==1 &&sensorValue5==1 ){
         turnLeft();
-        delay(200);
+        delay(100);
         stopMotors();
         updateSensorValues();
       }else if(sensorValue1==0&& sensorValue2==0 &&sensorValue3==1 &&sensorValue4==1 &&sensorValue5==1 ){
         turnLeft();
-        delay(300);
+        delay(150);
         stopMotors();
         updateSensorValues();
       }else if(sensorValue1==0&& sensorValue2==1 &&sensorValue3==1 &&sensorValue4==1 &&sensorValue5==1 ){
         turnLeft();
         updateSensorValues();
-        delay(300);
+        delay(150);
         stopMotors();
       }else if(sensorValue1==0&& sensorValue2==1 &&sensorValue3==0 &&sensorValue4==1 &&sensorValue5==1 ){
         turnLeft();
-        delay(300);
+        delay(150);
         stopMotors();
         updateSensorValues();
       }else if(sensorValue1==0 && (sensorValue4==1 ||sensorValue5==1) ){
         turnLeft();
-        delay(200);
+        delay(100);
         stopMotors();
         updateSensorValues();
       }else if(sensorValue2==0 && (sensorValue4==1 ||sensorValue5==1) ){
         turnLeft();
-        delay(200);
+        delay(100);
         stopMotors();
         updateSensorValues();
       }
@@ -307,6 +296,7 @@ void loop() {
       updateSensorValues(); // Update sensor values after all turns
 
     }
+
 }
 
 void moveMotorForward() {
