@@ -1,25 +1,48 @@
-const int sensorPin1 = A0;
-const int sensorPin2 = A1;
-const int sensorPin3 = A2;
-const int sensorPin4 = A3;
-const int sensorPin5 = A4;
-const int mrb = 2; //motor-right-back
-const int mrf = 3; //motor-right-front
-const int mlf = 4; //motor-left-front
-const int mlb = 5; //motor-left-back
-const int enaRight = 6;
-const int enaLeft = 10;
-const int trigPin = 11;
-const int echoPin = 12;
-const int ldrAnalogPin = A5;
-int sensorValue1 ; // 0 or 1
-int sensorValue2 ;
-int sensorValue3 ;
-int sensorValue4 ;
-int sensorValue5 ;
-int ldrAnalogValue ;
-float timer ; // จับเวลา
-long duration, distance;
+////////////////////////////////////////////////////////////////////
+//                       Pin Configuration                         //
+////////////////////////////////////////////////////////////////////
+//                   !!! Motor Pins !!!                          //
+// Right Speed Control = 6  |  Direction = 2 & 3                  //
+// Left Speed Control  = 10 |  Direction = 4 & 5                  //
+// -------------------------------------------------------------- //
+//    Direction 1  |  Direction 2  |  Robot                      //
+//       LOW       |      HIGH     |  FORWARD                    //
+//       HIGH      |      LOW      |  BACKWARD                   //
+////////////////////////////////////////////////////////////////////
+
+const int sensorPin1   = A0;  // Line sensor 1
+const int sensorPin2   = A1;  // Line sensor 2
+const int sensorPin3   = A2;  // Line sensor 3
+const int sensorPin4   = A3;  // Line sensor 4
+const int sensorPin5   = A4;  // Line sensor 5
+
+const int mrb          = 2;   // Motor-right-back
+const int mrf          = 3;   // Motor-right-front
+const int mlf          = 4;   // Motor-left-front
+const int mlb          = 5;   // Motor-left-back
+
+const int enaRight     = 6;   // Enable right motor
+const int enaLeft      = 10;  // Enable left motor
+
+const int trigPin      = 11;  // Ultrasonic sensor trigger
+const int echoPin      = 12;  // Ultrasonic sensor echo
+
+const int ldrAnalogPin = A5;  // LDR (Light Dependent Resistor) analog pin
+
+////////////////////////////////////////////////////////////////////
+//                      Sensor Values                             //
+////////////////////////////////////////////////////////////////////
+
+int sensorValue1;  // 0 or 1
+int sensorValue2;
+int sensorValue3;
+int sensorValue4;
+int sensorValue5;
+
+int ldrAnalogValue;  // LDR value
+float timer;         // Timer to measure intervals
+long duration, distance;  // Ultrasonic sensor duration and distance
+
 
 
 void setup() {
@@ -61,7 +84,7 @@ void loop() {
     duration = pulseIn(echoPin, HIGH);
     distance = (duration * 0.034 / 2);
   }
-  // อ่านทาง
+  // อ่านทาง -------------------------------------------------------------------------------------
   if (sensorValue1 <= 0 || sensorValue2 <= 0 || sensorValue3 <= 0 ||
   sensorValue4 <= 0 || sensorValue5 <= 0) {
     /*
@@ -196,7 +219,7 @@ void loop() {
 
   }
 
-  // เจอเส้นดำ 5 ตัว
+  // เจอเส้นดำ 5 ตัว ---------------------------------------------------------------------------
   if (sensorValue1 <= 0 && sensorValue2 <= 0 && sensorValue3 <= 0 &&
       sensorValue4 <= 0 && sensorValue5 <= 0) {
 
@@ -237,7 +260,7 @@ void loop() {
 
   }
 
-  // เชคถ้าไม่เจอเส้นดำ หรือ ถ้าเป็นขาวหมด
+  // เชคถ้าไม่เจอเส้นดำ หรือ ถ้าเป็นขาวหมด -----------------------------------------------------------------------------------
   if ((sensorValue1 == 1 && sensorValue2 == 1 && sensorValue3 == 1 && sensorValue4 == 1 && sensorValue5 == 1) ||
       sensorValue1 == 0 && sensorValue2 == 0 && sensorValue3 == 0 && sensorValue4 == 0 && sensorValue5 == 0) {
     moveMotorForward();
@@ -297,7 +320,7 @@ void loop() {
 
   }
 
-  // // เส้นประ
+  // // เส้นประ ---------------------------------------------------------------------------------------------------------------------
   if(sensorValue1==1&& sensorValue2==1 &&sensorValue3==1 &&sensorValue4==1 &&sensorValue5==1 ){
     timer = millis();
     while(millis()- timer<2200 &&sensorValue1==1&& sensorValue2==1 &&sensorValue3==1 &&sensorValue4==1 &&sensorValue5==1 ){
